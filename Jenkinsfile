@@ -3,35 +3,33 @@ pipeline {
 
     stages {
 
-        stage('Clone') {
+        stage('Clone Repo') {
             steps {
-                echo 'Cloning repository...'
+                git 'https://github.com/M-Kallel/etolv-multi-service.git'
             }
         }
 
         stage('Build Docker Images') {
             steps {
-                sh 'docker compose build'
+                bat 'docker-compose build'
             }
         }
 
         stage('Run Containers') {
             steps {
-                sh 'docker compose up -d'
+                bat 'docker-compose up -d'
             }
         }
 
-        stage('Test Backend') {
+        stage('Kubernetes Deploy') {
             steps {
-                sh 'curl http://etolv.local/backend/api/hello'
+                bat 'kubectl apply -f k8s/'
             }
         }
 
-        stage('Test Frontends') {
+        stage('Check Pods') {
             steps {
-                sh 'curl http://etolv.local/acc'
-                sh 'curl http://etolv.local/portal'
-                sh 'curl http://etolv.local/admin'
+                bat 'kubectl get pods'
             }
         }
     }
