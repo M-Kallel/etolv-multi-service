@@ -2,22 +2,15 @@ pipeline {
     agent any
 
     stages {
-
-        stage('Clone Repo') {
-            steps {
-                git 'https://github.com/M-Kallel/etolv-multi-service.git'
-            }
-        }
-
         stage('Build Docker Images') {
             steps {
-                bat 'docker-compose build'
+                bat 'docker compose build'
             }
         }
 
         stage('Run Containers') {
             steps {
-                bat 'docker-compose up -d'
+                bat 'docker compose up -d'
             }
         }
 
