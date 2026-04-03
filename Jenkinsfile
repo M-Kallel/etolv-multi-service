@@ -8,6 +8,12 @@ pipeline {
             }
         }
 
+        stage('Cleanup Old Containers') {
+            steps {
+                bat 'docker compose down'
+            }
+        }
+
         stage('Run Containers') {
             steps {
                 bat 'docker compose up -d'
