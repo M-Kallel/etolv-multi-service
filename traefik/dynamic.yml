@@ -1,0 +1,75 @@
+http:
+  routers:
+    acc-router:
+      rule: "Host(`etolv.local`) && PathPrefix(`/acc`)"
+      service: acc-service
+      middlewares:
+        - acc-strip
+      entryPoints:
+        - web
+
+    portal-router:
+      rule: "Host(`etolv.local`) && PathPrefix(`/portal`)"
+      service: portal-service
+      middlewares:
+        - portal-strip
+      entryPoints:
+        - web
+
+    admin-router:
+      rule: "Host(`etolv.local`) && PathPrefix(`/admin`)"
+      service: admin-service
+      middlewares:
+        - admin-strip
+      entryPoints:
+        - web
+
+    backend-router:
+      rule: "Host(`etolv.local`) && PathPrefix(`/backend`)"
+      service: backend-service
+      middlewares:
+        - backend-strip
+      entryPoints:
+        - web
+
+  middlewares:
+    acc-strip:
+      stripPrefix:
+        prefixes:
+          - /acc
+
+    portal-strip:
+      stripPrefix:
+        prefixes:
+          - /portal
+
+    admin-strip:
+      stripPrefix:
+        prefixes:
+          - /admin
+
+    backend-strip:
+      stripPrefix:
+        prefixes:
+          - /backend
+
+  services:
+    acc-service:
+      loadBalancer:
+        servers:
+          - url: "http://acc-app:80"
+
+    portal-service:
+      loadBalancer:
+        servers:
+          - url: "http://portal-app:80"
+
+    admin-service:
+      loadBalancer:
+        servers:
+          - url: "http://admin-app:80"
+
+    backend-service:
+      loadBalancer:
+        servers:
+          - url: "http://backend-app:80"

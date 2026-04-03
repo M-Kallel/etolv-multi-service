@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: acc-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: acc
+  template:
+    metadata:
+      labels:
+        app: acc
+    spec:
+      containers:
+        - name: acc
+          image: etolv-multi-service-acc-app
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80

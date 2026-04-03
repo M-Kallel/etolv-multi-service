@@ -1,0 +1,42 @@
+services:
+  traefik:
+    image: traefik:v3.0
+    command:
+      - "--api.insecure=true"
+      - "--entrypoints.web.address=:80"
+      - "--providers.file.filename=/etc/traefik/dynamic.yml"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - ./traefik/dynamic.yml:/etc/traefik/dynamic.yml:ro
+    networks:
+      - etolv-network
+
+  acc-app:
+    build: ./acc-frontend
+    container_name: acc-app
+    networks:
+      - etolv-network
+
+  portal-app:
+    build: ./portal-frontend
+    container_name: portal-app
+    networks:
+      - etolv-network
+
+  admin-app:
+    build: ./admin-frontend
+    container_name: admin-app
+    networks:
+      - etolv-network
+
+  backend-app:
+    build: ./backend
+    container_name: backend-app
+    networks:
+      - etolv-network
+
+networks:
+  etolv-network:
+    driver: bridge

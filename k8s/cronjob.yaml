@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backend-cronjob
+spec:
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: backend-cron
+              image: etolv-multi-service-backend-app
+              imagePullPolicy: Never
+              command: ["php", "artisan", "schedule:run"]
+          restartPolicy: OnFailure
