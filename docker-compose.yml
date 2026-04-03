@@ -15,25 +15,21 @@ services:
 
   acc-app:
     build: ./acc-frontend
-    container_name: acc-app
     networks:
       - etolv-network
 
   portal-app:
     build: ./portal-frontend
-    container_name: portal-app
     networks:
       - etolv-network
 
   admin-app:
     build: ./admin-frontend
-    container_name: admin-app
     networks:
       - etolv-network
 
   backend-app:
     build: ./backend
-    container_name: backend-app
     networks:
       - etolv-network
 
