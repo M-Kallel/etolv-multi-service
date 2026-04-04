@@ -20,19 +20,22 @@ pipeline {
             }
         }
 
-       stage('Kubernetes Deploy') {
+      stage('Kubernetes Deploy') {
     steps {
         bat '''
-        set KUBECONFIG=%USERPROFILE%\\.kube\\config
+        set KUBECONFIG=C:\\Users\\moate\\.kube\\config
         kubectl apply -f k8s/
         '''
     }
 }
 
-        stage('Check Pods') {
-            steps {
-                bat 'kubectl get pods'
-            }
-        }
+stage('Check Pods') {
+    steps {
+        bat '''
+        set KUBECONFIG=C:\\Users\\moate\\.kube\\config
+        kubectl get pods
+        '''
+    }
+}
     }
 }
