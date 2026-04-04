@@ -1,394 +1,193 @@
-\# ETOLV Multi-Service Application
+# 🚀 ETOLV Multi-Service DevOps Application
 
+## 📌 Overview
 
+This project is a full **DevOps-based multi-service application** that demonstrates modern deployment practices using:
 
-\## 📌 Project Overview
+* **Frontend:** Angular (Admin, Portal, ACC)
+* **Backend:** Laravel API
+* **Containerization:** Docker & Docker Compose
+* **Reverse Proxy:** Traefik
+* **Orchestration:** Kubernetes (K8s)
+* **CI/CD:** Jenkins
 
+---
 
-
-This project is a multi-service web application built using:
-
-
-
-\* \*\*Frontend:\*\* Angular (3 applications)
-
-
-
-&#x20; \* ACC Frontend
-
-&#x20; \* Portal Frontend
-
-&#x20; \* Admin Frontend
-
-\* \*\*Backend:\*\* Laravel (PHP)
-
-\* \*\*Containerization:\*\* Docker \& Docker Compose
-
-\* \*\*Reverse Proxy:\*\* Traefik
-
-\* \*\*Orchestration:\*\* Kubernetes (K8s)
-
-\* \*\*CI/CD:\*\* Jenkins (basic pipeline)
-
-
-
-\---
-
-
-
-\## 🏗️ Architecture
-
-
-
-User requests are routed using Traefik:
-
-
-
-\* `/acc` → ACC Frontend
-
-\* `/portal` → Portal Frontend
-
-\* `/admin` → Admin Frontend
-
-\* `/backend` → Laravel Backend API
-
-
-
-\### Flow:
-
-
-
-User → Traefik → Frontend (Angular) → Backend (Laravel API)
-
-
-
-\---
-
-
-
-\## ⚙️ Technologies Used
-
-
-
-\* Angular
-
-\* Laravel
-
-\* Docker
-
-\* Docker Compose
-
-\* Traefik
-
-\* Kubernetes
-
-\* Jenkins
-
-
-
-\---
-
-
-
-\## 🚀 How to Run (Docker)
-
-
-
-\### 1. Clone the repository
-
-
-
-```bash
-
-git clone https://github.com/YOUR\_USERNAME/etolv-multi-service.git
-
-cd etolv-multi-service
+## 🏗️ Architecture
 
 ```
-
-
-
-\### 2. Add host mapping
-
-
-
-Edit your hosts file:
-
-
-
-```text
-
-127.0.0.1 etolv.local
-
+User → Traefik → Frontends (Angular)
+                  ↓
+               Backend (Laravel API)
+                  ↓
+             Kubernetes Cluster
 ```
 
+---
 
+## ⚙️ Technologies Used
 
-\### 3. Run Docker
+* Docker / Docker Compose
+* Traefik (Routing)
+* Kubernetes (Deployments, Services, Ingress, CronJob)
+* Jenkins (CI/CD Pipeline)
+* Angular
+* Laravel
 
+---
 
+## 📦 Services
+
+| Service         | Description        |
+| --------------- | ------------------ |
+| acc-frontend    | ACC user interface |
+| admin-frontend  | Admin dashboard    |
+| portal-frontend | Main portal UI     |
+| backend         | Laravel REST API   |
+
+---
+
+## 🚀 How to Run Locally (Docker)
 
 ```bash
-
-docker compose up --build
-
+docker compose up -d
 ```
 
+Access:
 
+* http://etolv.local/acc
+* http://etolv.local/portal
+* http://etolv.local/admin
+* http://etolv.local/backend/api/hello
 
-\### 4. Access the application
+---
 
+## ☸️ Kubernetes Deployment
 
-
-\* http://etolv.local/acc
-
-\* http://etolv.local/portal
-
-\* http://etolv.local/admin
-
-\* http://etolv.local/backend/api/hello
-
-
-
-\---
-
-
-
-\## ☸️ Kubernetes Deployment
-
-
-
-\### Apply manifests:
-
-
+Apply manifests:
 
 ```bash
-
 kubectl apply -f k8s/
-
 ```
 
-
-
-\### Check resources:
-
-
+Check pods:
 
 ```bash
-
 kubectl get pods
-
-kubectl get svc
-
-kubectl get ingress
-
 ```
 
+---
 
+## 🔁 Jenkins CI/CD Pipeline
 
-\---
+The pipeline automates:
 
+1. Clone repository from GitHub
+2. Build Docker images
+3. Stop old containers
+4. Start new containers
+5. Deploy to Kubernetes
+6. Verify deployment
 
+### Jenkinsfile Example
 
-\## 🔐 Configuration
+```groovy
+pipeline {
+    agent any
 
+    environment {
+        KUBECONFIG = "C:\\Users\\moate\\.kube\\config"
+    }
 
+    stages {
+        stage('Build Docker Images') {
+            steps {
+                bat 'docker compose build'
+            }
+        }
 
-\### ConfigMap
+        stage('Stop Old Containers') {
+            steps {
+                bat 'docker compose down'
+            }
+        }
 
+        stage('Run Containers') {
+            steps {
+                bat 'docker compose up -d'
+            }
+        }
 
+        stage('Kubernetes Deploy') {
+            steps {
+                bat 'kubectl apply -f k8s/'
+            }
+        }
 
-Used to store application configuration:
-
-
-
-\* APP\_NAME
-
-\* APP\_ENV
-
-\* APP\_DEBUG
-
-
-
-\### Secret
-
-
-
-Used to store sensitive data:
-
-
-
-\* DB\_PASSWORD
-
-\* API\_KEY
-
-
-
-\---
-
-
-
-\## ⏰ CronJob
-
-
-
-A Kubernetes CronJob is configured to run:
-
-
-
-```bash
-
-php artisan schedule:run
-
+        stage('Check Pods') {
+            steps {
+                bat 'kubectl get pods'
+            }
+        }
+    }
+}
 ```
 
+---
 
+## 🌐 Access (Jenkins Environment)
 
-Every 5 minutes.
+Due to port conflicts, Jenkins uses:
 
+* http://etolv.local:8081
+* Traefik Dashboard: http://localhost:8082
 
+---
 
-\---
+## 🎯 Key Features
 
+* Microservices architecture
+* Reverse proxy routing with Traefik
+* Containerized applications
+* Kubernetes orchestration
+* Automated CI/CD pipeline with Jenkins
+* CronJob integration in Kubernetes
 
+---
 
-\## 🔄 CI/CD Pipeline (Jenkins)
+## 📈 What I Learned
 
+* Building multi-service architectures
+* Docker networking and container management
+* Traefik routing and middleware
+* Kubernetes deployments and services
+* CI/CD pipeline creation with Jenkins
+* Debugging real DevOps issues (ports, containers, kubeconfig)
 
+---
 
-The Jenkins pipeline includes:
+## 👨‍💻 Author
 
+**Mootez Kallel**
 
+GitHub: https://github.com/M-Kallel
 
-\* Build Docker images
+---
 
-\* Tag images
+## 📎 Project Link
 
-\* Push to Docker Hub
+👉 https://github.com/M-Kallel/etolv-multi-service
 
-\* Deploy to Kubernetes
+---
 
-\* Verify deployment
+## ✅ Status
 
+✔ Fully Working
+✔ CI/CD Implemented
+✔ Kubernetes Deployed
 
+---
 
-\---
+## 🔥 Final Note
 
-
-
-\## 🔍 Traefik vs Nginx
-
-
-
-\* \*\*Traefik\*\*
-
-
-
-&#x20; \* Dynamic routing
-
-&#x20; \* Native Docker integration
-
-&#x20; \* Automatic service discovery
-
-
-
-\* \*\*Nginx\*\*
-
-
-
-&#x20; \* Static configuration
-
-&#x20; \* Manual setup required
-
-
-
-👉 Traefik is better suited for microservices and container environments.
-
-
-
-\---
-
-
-
-\## 📂 Project Structure
-
-
-
-```text
-
-etolv-multi-service/
-
-├── acc-frontend/
-
-├── portal-frontend/
-
-├── admin-frontend/
-
-├── backend/
-
-├── traefik/
-
-├── k8s/
-
-├── docker-compose.yml
-
-├── Jenkinsfile
-
-└── README.md
-
-```
-
-
-
-\---
-
-
-
-\## ✅ Features
-
-
-
-\* Multi-frontend architecture
-
-\* REST API backend
-
-\* Dockerized services
-
-\* Reverse proxy routing
-
-\* Kubernetes deployment
-
-\* ConfigMap \& Secret usage
-
-\* Scheduled jobs (CronJob)
-
-
-
-\---
-
-
-
-\## 👨‍💻 Author
-
-
-
-Moatez Kallel
-
-
-
-\---
-
-
-
-\## 📌 Notes
-
-
-
-\* Phase 5 (advanced Jenkins / Helm) is optional bonus
-
-\* Project is fully functional with Docker and Kubernetes
-
-\* Designed for DevOps learning and microservices architecture
-
-
-
+This project demonstrates a complete DevOps workflow from development to deployment using modern tools and best practices.
