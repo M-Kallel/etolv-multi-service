@@ -20,11 +20,14 @@ pipeline {
             }
         }
 
-        stage('Kubernetes Deploy') {
-            steps {
-                bat 'kubectl apply -f k8s/'
-            }
-        }
+       stage('Kubernetes Deploy') {
+    steps {
+        bat '''
+        set KUBECONFIG=%USERPROFILE%\\.kube\\config
+        kubectl apply -f k8s/
+        '''
+    }
+}
 
         stage('Check Pods') {
             steps {
